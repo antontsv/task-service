@@ -31,6 +31,8 @@ type taskService struct{}
 
 var errNotImplemented = errors.New("Not implemented yet")
 
+var tasks = make([]Task, 0)
+
 func (taskService) Add(t Task) error {
 	return errNotImplemented
 }
@@ -44,7 +46,10 @@ func (taskService) Remove(name string) error {
 }
 
 func (taskService) Show(maxSize int) ([]Task, error) {
-	return make([]Task, 0), nil
+	if cap(tasks) < maxSize {
+		maxSize = cap(tasks)
+	}
+	return tasks[0:maxSize], nil
 }
 
 func main() {
