@@ -19,11 +19,9 @@ type Task struct {
 
 // TaskService provides operations to collect and show tasks
 type TaskService interface {
-	// Add creates a task given name and description
 	Add(Task) error
 	Count() int
-	// Removes a task give a name
-	Remove(string) error
+	Remove(Task) error
 	Show(int) ([]Task, error)
 }
 
@@ -41,7 +39,7 @@ func (taskService) Count() int {
 	return 0
 }
 
-func (taskService) Remove(name string) error {
+func (taskService) Remove(t Task) error {
 	return errNotImplemented
 }
 
@@ -53,18 +51,17 @@ func (taskService) Show(maxSize int) ([]Task, error) {
 }
 
 func main() {
-	ctx := context.Background()
-	svc := taskService{}
+	http.Handle("/count", httpCountHandler())
+	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+}
 
-	countHandler := httptransport.NewServer(
-		ctx,
-		makeCountEndpoint(svc),
+func httpCountHandler() *httptransport.Server {
+	return httptransport.NewServer(
+		context.Background(),
+		makeCountEndpoint(taskService{}),
 		func(context.Context, *http.Request) (request interface{}, err error) { return nil, nil },
 		encodeResponse,
 	)
-
-	http.Handle("/count", countHandler)
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
 
 func makeCountEndpoint(svc TaskService) endpoint.Endpoint {
