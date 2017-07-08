@@ -1,4 +1,5 @@
 # Task microservice
+[![Build Status](https://travis-ci.org/antontsv/task-service.svg?branch=master)](https://travis-ci.org/antontsv/task-service)
 
 Simple REST service to keep track of tasks; based on gokit.io
 
