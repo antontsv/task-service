@@ -57,7 +57,6 @@ func main() {
 
 func httpCountHandler() *httptransport.Server {
 	return httptransport.NewServer(
-		context.Background(),
 		makeCountEndpoint(taskService{}),
 		func(context.Context, *http.Request) (request interface{}, err error) { return nil, nil },
 		encodeResponse,
